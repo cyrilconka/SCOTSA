@@ -386,6 +386,75 @@
   @media (max-width: 400px) {
     .title { font-size: 1.5rem; }
   }
+
+  /* FLYER SECTION */
+  .flyer-section {
+    margin-top: 60px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 2.7s;
+  }
+
+  .flyer-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    display: inline-block;
+    position: relative;
+  }
+
+  .flyer-label::before { content: '── '; }
+  .flyer-label::after  { content: ' ──'; }
+
+  .flyer-wrapper {
+    display: inline-block;
+    position: relative;
+    max-width: 520px;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0,212,255,0.08), 0 0 80px rgba(0,0,0,0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .flyer-wrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 60px rgba(0,212,255,0.15), 0 0 100px rgba(0,0,0,0.6);
+  }
+
+  .flyer-wrapper::before,
+  .flyer-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 24px; height: 24px;
+    border-color: var(--accent2);
+    border-style: solid;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .flyer-wrapper::before { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+  .flyer-wrapper::after  { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+  .flyer-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 600px) {
+    .flyer-wrapper {
+      max-width: 320px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .flyer-wrapper {
+      max-width: 260px;
+    }
+}
 </style>
 </head>
 <body>
@@ -468,10 +537,12 @@
       </tbody>
     </table>
 
-    <div>
-        <img src="WhatsApp Image 2026-02-25 at 6.32.48 PM.jpeg" alt="flyer">
+    <!-- FLYER SECTION -->
+  <section class="flyer-section">
+    <div class="flyer-wrapper">
+      <img src="WhatsApp Image 2026-02-25 at 6.32.48 PM.jpeg" alt="Program Flyer" class="flyer-img" />
     </div>
-  </div>
+  </section>
 
   <footer class="footer">
     <div class="footer-status">
@@ -483,4 +554,3 @@
 </div>
 </body>
 </html>
-
