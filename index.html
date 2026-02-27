@@ -1,116 +1,478 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>SCOTSA: From code to intelligence</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FROM CODE TO INTELLIGENCE</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-body{
-    background:#0a0a0a;
-    color:#00ff9f;
-    font-family: "Courier New", monospace;
-    padding:40px;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.container{
-    border:2px solid #00ff9f;
-    padding:30px;
-    box-shadow:0 0 20px #00ff9f;
-}
+  :root {
+    --bg: #020810;
+    --surface: #040d1a;
+    --border: #0a2a4a;
+    --accent: #00d4ff;
+    --accent2: #00ff9d;
+    --accent3: #ff6b35;
+    --text: #c8e6f5;
+    --muted: #4a7a9b;
+    --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+  }
 
-h1{
-    text-align:center;
-    color:#00ffff;
-}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-.activity{
-    display:flex;
-    justify-content:space-between;
-    padding:8px 0;
-    border-bottom:1px dashed #00ff9f;
-}
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-.code{
-    color:#888;
-}
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(0,50,100,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(0,100,80,0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+  }
+
+  .header-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .header-badge::before { content: '[ '; }
+  .header-badge::after { content: ' ]'; }
+
+  .title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.4s;
+  }
+
+  .subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.6s;
+  }
+
+  .program-label {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 16px;
+    letter-spacing: 4px;
+    margin-top: 16px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.8s;
+    position: relative;
+  }
+
+  .program-label::before,
+  .program-label::after {
+    content: '';
+    position: absolute;
+    width: 6px; height: 6px;
+    border: 1px solid var(--accent2);
+    background: var(--accent2);
+  }
+  .program-label::before { top: -3px; left: -3px; }
+  .program-label::after { bottom: -3px; right: -3px; }
+
+  /* Scanning line animation */
+  .scan-line {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 40px 0;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards 1s;
+  }
+
+  .scan-line::after {
+    content: '';
+    position: absolute;
+    width: 80px; height: 100%;
+    background: var(--accent);
+    filter: blur(4px);
+    animation: scanMove 3s ease-in-out infinite;
+  }
+
+  @keyframes scanMove {
+    0% { left: -80px; }
+    100% { left: 100%; }
+  }
+
+  /* PROGRAM TABLE */
+  .program-table {
+    width: 100%;
+    border-collapse: collapse;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+
+  .program-table thead tr {
+    background: rgba(0, 212, 255, 0.05);
+    border-top: 1px solid var(--accent);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .program-table thead th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    padding: 14px 20px;
+    text-align: left;
+    font-weight: normal;
+  }
+
+  .program-table thead th:first-child::before { content: '> '; }
+
+  .program-table tbody tr {
+    border-bottom: 1px solid rgba(10, 42, 74, 0.5);
+    transition: all 0.3s ease;
+    position: relative;
+    animation: rowFadeIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  .program-table tbody tr:nth-child(1) { animation-delay: 1.3s; }
+  .program-table tbody tr:nth-child(2) { animation-delay: 1.4s; }
+  .program-table tbody tr:nth-child(3) { animation-delay: 1.5s; }
+  .program-table tbody tr:nth-child(4) { animation-delay: 1.6s; }
+  .program-table tbody tr:nth-child(5) { animation-delay: 1.7s; }
+  .program-table tbody tr:nth-child(6) { animation-delay: 1.8s; }
+  .program-table tbody tr:nth-child(7) { animation-delay: 1.9s; }
+  .program-table tbody tr:nth-child(8) { animation-delay: 2.0s; }
+  .program-table tbody tr:nth-child(9) { animation-delay: 2.1s; }
+  .program-table tbody tr:nth-child(10) { animation-delay: 2.2s; }
+  .program-table tbody tr:nth-child(11) { animation-delay: 2.3s; }
+  .program-table tbody tr:nth-child(12) { animation-delay: 2.4s; }
+
+  .program-table tbody tr:hover {
+    background: rgba(0, 212, 255, 0.04);
+  }
+
+  .program-table tbody tr:hover td:first-child {
+    color: #fff;
+    border-left: 2px solid var(--accent);
+    padding-left: 18px;
+  }
+
+  .program-table td {
+    padding: 16px 20px;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    font-weight: 400;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+    border-left: 2px solid transparent;
+  }
+
+  .program-table td:first-child {
+    color: var(--text);
+    font-weight: 600;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+  }
+
+  .program-table td:last-child {
+    color: var(--accent2);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .row-index {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    display: inline-block;
+    width: 22px;
+    margin-right: 8px;
+    opacity: 0.5;
+  }
+
+  /* Speaker rows get a subtle highlight */
+  .speaker-row {
+    background: rgba(255, 107, 53, 0.02);
+  }
+
+  .speaker-row td:first-child { color: #f0c090; }
+  .speaker-row td:last-child { color: var(--accent3); }
+
+  @keyframes rowFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards 2.5s;
+  }
+
+  .footer .blink {
+    color: var(--accent2);
+    animation: blink 1.2s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .footer-status {
+    display: flex; gap: 20px; flex-wrap: wrap;
+  }
+
+  /* Decorative corner brackets */
+  .bracket-box {
+    position: relative;
+    padding: 2px;
+  }
+
+  .bracket-box::before,
+  .bracket-box::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--accent);
+    border-style: solid;
+  }
+
+  .bracket-box::before {
+    top: 0; left: 0;
+    border-width: 2px 0 0 2px;
+  }
+
+  .bracket-box::after {
+    bottom: 0; right: 0;
+    border-width: 0 2px 2px 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .container { padding: 24px 16px 40px; }
+    .header { margin-bottom: 36px; }
+
+    .program-table thead { display: none; }
+    .program-table, .program-table tbody, .program-table tr, .program-table td {
+      display: block; width: 100%;
+    }
+
+    .program-table tbody tr {
+      background: rgba(4, 13, 26, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 10px;
+      padding: 14px 16px;
+      position: relative;
+    }
+
+    .program-table tbody tr::before {
+      content: attr(data-index);
+      position: absolute;
+      top: 10px; right: 14px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .program-table td {
+      padding: 2px 0;
+      border-left: none;
+    }
+
+    .program-table td:first-child {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      padding-right: 40px;
+    }
+
+    .program-table td:last-child {
+      font-size: 0.75rem;
+    }
+
+    .program-table td:last-child::before {
+      content: '↳ ';
+      color: var(--muted);
+    }
+
+    .program-table tbody tr:hover td:first-child {
+      border-left: none;
+      padding-left: 0;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .title { font-size: 1.5rem; }
+  }
 </style>
 </head>
-
 <body>
-
 <div class="container">
 
-<h1>> FROM CODE TO INTELLIGENCE</h1>
-<p class="code">// HOW MACHINES LEARN, MOVE AND COMMUNICATE</p>
+  <header class="header">
+    <div class="header-badge">SCOTSA · TECH PROGRAM</div>
+    <h1 class="title">From Code to<br>Intelligence</h1>
+    <p class="subtitle">How Machines Learn, Move & Communicate</p>
+    <span class="program-label">PROGRAM OUTLINE</span>
+  </header>
 
-<br>
+  <div class="scan-line"></div>
 
-<div class="activity">
-<span>System Boot: Arrival & Registration</span>
-<span>[INIT]</span>
+  <div class="bracket-box">
+    <table class="program-table">
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Personnel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-index="01">
+          <td><span class="row-index">01</span>Arrival &amp; Registration</td>
+          <td>—</td>
+        </tr>
+        <tr data-index="02">
+          <td><span class="row-index">02</span>Opening Prayer</td>
+          <td>Ps Benjamin Corban</td>
+        </tr>
+        <tr data-index="03">
+          <td><span class="row-index">03</span>Welcome Address</td>
+          <td>Cyril</td>
+        </tr>
+        <tr data-index="04">
+          <td><span class="row-index">04</span>Introduction of Guests &amp; SCOTSA Executives</td>
+          <td>Justice</td>
+        </tr>
+        <tr class="speaker-row" data-index="05">
+          <td><span class="row-index">05</span>First Speaker</td>
+          <td>AI with Enoch</td>
+        </tr>
+        <tr class="speaker-row" data-index="06">
+          <td><span class="row-index">06</span>Second Speaker</td>
+          <td>Charles A. Babbage</td>
+        </tr>
+        <tr class="speaker-row" data-index="07">
+          <td><span class="row-index">07</span>Third Speaker</td>
+          <td>Frederick</td>
+        </tr>
+        <tr class="speaker-row" data-index="08">
+          <td><span class="row-index">08</span>Fourth Speaker</td>
+          <td>Edwin Agbah</td>
+        </tr>
+        <tr class="speaker-row" data-index="09">
+          <td><span class="row-index">09</span>Fifth Speaker</td>
+          <td>Mr. Max</td>
+        </tr>
+        <tr data-index="10">
+          <td><span class="row-index">10</span>Panel Discussion &amp; Questions</td>
+          <td>—</td>
+        </tr>
+        <tr data-index="11">
+          <td><span class="row-index">11</span>Closing Remarks</td>
+          <td>Paul Walter</td>
+        </tr>
+        <tr data-index="12">
+          <td><span class="row-index">12</span>Closing Prayer</td>
+          <td>Emmanuel Odamtten</td>
+        </tr>
+        <tr data-index="13">
+          <td><span class="row-index">13</span>Socialization &amp; Pictures</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-status">
+      <span>SYSTEM: ONLINE</span>
+      <span>ITEMS: 13</span>
+    </div>
+    <span><span class="blink">▮</span> LIVE</span>
+  </footer>
+
 </div>
-
-<div class="activity">
-<span>Opening Prayer</span>
-<span>Ps Benjamin Corban</span>
-</div>
-
-<div class="activity">
-<span>Welcome Address</span>
-<span>Cyril</span>
-</div>
-
-<div class="activity">
-<span>Guest Introductions</span>
-<span>SCOTSA President</span>
-</div>
-
-<div class="activity">
-<span>AI Session</span>
-<span>Enoch</span>
-</div>
-
-<div class="activity">
-<span>Tech Talk</span>
-<span>Charles A. Babbage</span>
-</div>
-
-<div class="activity">
-<span>Robotics Session</span>
-<span>Frederick</span>
-</div>
-
-<div class="activity">
-<span>Networking Talk</span>
-<span>Edwin Agbah</span>
-</div>
-
-<div class="activity">
-<span>Tech Talk</span>
-<span>Mr Max</span>
-</div>
-
-<div class="activity">
-<span>Panel Discussion and Questions</span>
-<span>[LIVE]</span>
-</div>
-
-<div class="activity">
-<span>Closing Remarks</span>
-<span>Paul Walter</span>
-</div>
-
-<div class="activity">
-<span>Closing Prayer</span>
-<span>Emmanuel Odamtten</span>
-</div>
-
-<div class="activity">
-<span>Networking & Photos</span>
-<span>[END PROCESS]</span>
-</div>
-
-</div>
-
 </body>
-
 </html>
